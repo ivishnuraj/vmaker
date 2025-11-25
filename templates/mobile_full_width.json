@@ -1,0 +1,40 @@
+{
+  "name": "mobile_full_width",
+  "description": "Mobile video with full width and text overlays on top and bottom",
+  "start": 0,
+  "duration": 15,
+  "resolution": "1080:1920",
+  "output_name": "mobile_full_{timestamp}.mp4",
+  "overlays": [
+    {
+      "type": "text",
+      "text": "TOP TEXT HERE",
+      "x": "(w-text_w)/2",
+      "y": "100",
+      "fontSize": 48,
+      "textColor": "white",
+      "box": true,
+      "boxColor": "black@0.7",
+      "boxBorder": 20,
+      "shadow": true,
+      "shadowColor": "black@0.8",
+      "shadowX": 3,
+      "shadowY": 3
+    },
+    {
+      "type": "text",
+      "text": "BOTTOM TEXT HERE",
+      "x": "(w-text_w)/2",
+      "y": "h-150",
+      "fontSize": 42,
+      "textColor": "yellow",
+      "box": true,
+      "boxColor": "black@0.8",
+      "boxBorder": 15,
+      "shadow": true,
+      "stroke": true,
+      "strokeColor": "black",
+      "strokeWidth": 2
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "resolution": "1080x1920",
+  "texts": [
+    {
+      "text": "அவர் என்ன சொன்னார்!?",
+      "fontsize": 70,
+      "fontcolor": "yellow",
+      "x": "center",
+      "y": "top",
+      "fontfile": "fonts/tamil/NotoSansTamil-Bold.ttf",
+      "box": false,
+      "boxcolor": "black",
+      "boxborder": 20,
+      "strokecolor": "black",
+      "strokewidth": 6,
+      "shadowcolor": "black@0.8",
+      "shadowx": 4,
+      "shadowy": 4
+    },
+    {
+      "text": "😬",
+      "fontsize": 70,
+      "fontcolor": "yellow",
+      "x": "center",
+      "y": "bottom",
+      "fontfile": "fonts/NotoColorEmoji.ttf",
+      "box": false,
+      "boxcolor": "black",
+      "boxborder": 20
+    },
+    {
+      "text": "Watch till the end!",
+      "fontsize": 40,
+      "fontcolor": "red",
+      "x": "center",
+      "y": "bottom",
+      "box": true,
+      "boxcolor": "black@0.6",
+      "boxborder": 18,
+      "strokecolor": "black",
+      "strokewidth": 6,
+      "shadowcolor": "black@0.8",
+      "shadowx": 4,
+      "shadowy": 4
+    }
+  ]
+}

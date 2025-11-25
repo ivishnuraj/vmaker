@@ -1,0 +1,36 @@
+{
+  "name": "highlight",
+  "description": "30-second highlight clip",
+  "start": 10,
+  "duration": 30,
+  "resolution": "1920:1080",
+  "output_name": "highlight_{timestamp}.mp4",
+  "overlays": [
+    {
+      "type": "text",
+      "text": "HIGHLIGHT MOMENT",
+      "x": "(w-text_w)/2",
+      "y": "50",
+      "fontSize": 72,
+      "textColor": "yellow",
+      "stroke": true,
+      "strokeColor": "black",
+      "strokeWidth": 3,
+      "shadow": true,
+      "shadowColor": "black@0.9",
+      "shadowX": 4,
+      "shadowY": 4
+    },
+    {
+      "type": "text",
+      "text": "⚡ EPIC ⚡",
+      "x": "(w-text_w)/2",
+      "y": "h-150",
+      "fontSize": 48,
+      "textColor": "white",
+      "box": true,
+      "boxColor": "red@0.8",
+      "boxBorder": 20
+    }
+  ]
+}

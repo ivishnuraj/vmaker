@@ -1,0 +1,40 @@
+{
+  "name": "vertical_story",
+  "description": "Vertical story format for mobile",
+  "start": 5,
+  "duration": 20,
+  "resolution": "1080:1920",
+  "output_name": "story_{timestamp}.mp4",
+  "overlays": [
+    {
+      "type": "text",
+      "text": "📱 STORY TIME 📱",
+      "x": "(w-text_w)/2",
+      "y": "80",
+      "fontSize": 42,
+      "textColor": "white",
+      "box": true,
+      "boxColor": "purple@0.8",
+      "boxBorder": 15,
+      "shadow": true
+    },
+    {
+      "type": "text",
+      "text": "Swipe up for more!",
+      "x": "(w-text_w)/2",
+      "y": "h-120",
+      "fontSize": 32,
+      "textColor": "yellow",
+      "stroke": true,
+      "strokeColor": "black",
+      "strokeWidth": 2
+    },
+    {
+      "type": "emoji",
+      "emoji": "👆",
+      "x": "(w-text_w)/2",
+      "y": "h-200",
+      "fontSize": 48
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+fastapi
+uvicorn[standard]
+yt-dlp
+faster-whisper
+aiofiles
+python-multipart
+pydantic

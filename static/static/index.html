@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Automation Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+.toast { position: fixed; top: 20px; right: 20px; z-index: 1000; }
+</style>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+
+<header class="bg-white shadow-lg p-6">
+  <div class="flex items-center">
+   
+    <h1 class="text-3xl font-bold text-gray-800">Video Automation Tool</h1>
+  </div>
+</header>
+
+<main class="container mx-auto p-6">
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+
+    <!-- Download -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <h3 class="text-xl font-semibold mb-4 text-blue-600">1) Download YouTube Video</h3>
+      <input id="ytUrl" class="w-full p-3 border border-gray-300 rounded mb-3" placeholder="Paste YouTube URL here...">
+      <input id="ytSession" class="w-full p-3 border border-gray-300 rounded mb-3" placeholder="Session ID (optional)">
+      <button class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded" onclick="queueDownload()">Download</button>
+      <div class="mt-3 text-sm" id="downloadResp"></div>
+    </div>
+
+    <!-- Transcribe -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <h3 class="text-xl font-semibold mb-4 text-green-600">2) Transcribe (Tamil) – Faster Whisper</h3>
+      <input id="trFile" class="w-full p-3 border border-gray-300 rounded mb-3" placeholder="Downloaded file name (mp4)">
+      <input id="trSession" class="w-full p-3 border border-gray-300 rounded mb-3" placeholder="Session ID (optional)">
+      <button class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded" onclick="queueTranscribe()">Transcribe</button>
+      <div class="mt-3 text-sm" id="transcribeResp"></div>
+    </div>
+
+    <!-- Basic Clip -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <h3 class="text-xl font-semibold mb-4 text-yellow-600">3) Basic Clip</h3>
+      <input id="clFile" class="w-full p-3 border border-gray-300 rounded mb-2" placeholder="filename.mp4">
+      <input id="clStart" class="w-full p-3 border border-gray-300 rounded mb-2" placeholder="Start sec">
+      <input id="clEnd" class="w-full p-3 border border-gray-300 rounded mb-2" placeholder="End sec">
+      <input id="clText" class="w-full p-3 border border-gray-300 rounded mb-2" placeholder="Text Overlay (optional)">
+      <input id="clSession" class="w-full p-3 border border-gray-300 rounded mb-2" placeholder="Session ID (optional)">
+      <input id="clOut" class="w-full p-3 border border-gray-300 rounded mb-2" placeholder="Output name (optional)">
+      <button class="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-4 rounded" onclick="queueClip()">Create Clip</button>
+      <div class="mt-3 text-sm" id="clipResp"></div>
+    </div>
+
+    <!-- Template Clip -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <h3 class="text-xl font-semibold mb-4 text-purple-600">4) Template Clip</h3>
+      <input id="tplFilename" class="w-full p-3 border border-gray-300 rounded mb-2" placeholder="filename.mp4">
+      <input id="tplStart" class="w-full p-3 border border-gray-300 rounded mb-2" placeholder="Start sec">
+      <input id="tplEnd" class="w-full p-3 border border-gray-300 rounded mb-2" placeholder="End sec">
+      <input id="tplName" class="w-full p-3 border border-gray-300 rounded mb-2" placeholder="template name in /templates">
+      <textarea id="tplJson" class="w-full p-3 border border-gray-300 rounded mb-2" placeholder="Or paste JSON template here"></textarea>
+      <input id="tplOutput" class="w-full p-3 border border-gray-300 rounded mb-2" placeholder="output name.mp4">
+      <input id="tplSession" class="w-full p-3 border border-gray-300 rounded mb-2" placeholder="Session ID (optional)">
+      <button class="w-full bg-purple-500 hover:bg-purple-600 text-white font-bold py-3 px-4 rounded" onclick="queueTemplateClip()">Generate Template Clip</button>
+      <div class="mt-3 text-sm" id="tplResp"></div>
+    </div>
+
+    <!-- Merge Clips -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <h3 class="text-xl font-semibold mb-4 text-gray-600">5) Merge Clips</h3>
+      <textarea id="mergeList" class="w-full p-3 border border-gray-300 rounded mb-2" placeholder="clip1.mp4, clip2.mp4"></textarea>
+      <input id="mergeOutput" class="w-full p-3 border border-gray-300 rounded mb-2" placeholder="merged_output.mp4">
+      <input id="mergeSession" class="w-full p-3 border border-gray-300 rounded mb-2" placeholder="Session ID (optional)">
+      <button class="w-full bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-4 rounded" onclick="queueMerge()">Merge</button>
+      <div class="mt-3 text-sm" id="mergeResp"></div>
+    </div>
+
+    <!-- Session Cleanup -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <h3 class="text-xl font-semibold mb-4 text-red-600">6) Cleanup Session</h3>
+      <input id="cleanupSessionId" class="w-full p-3 border border-gray-300 rounded mb-2" placeholder="session_id">
+      <div class="flex items-center mb-2">
+        <input id="cleanupClips" type="checkbox" class="mr-2" checked>
+        <label>Delete Clips</label>
+      </div>
+      <div class="flex items-center mb-4">
+        <input id="cleanupVideo" type="checkbox" class="mr-2" checked>
+        <label>Delete Original Video</label>
+      </div>
+      <button class="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-4 rounded" onclick="doCleanup()">Cleanup</button>
+      <div class="mt-3 text-sm" id="cleanupResp"></div>
+    </div>
+
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Live System Logs -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <h3 class="text-xl font-semibold mb-4 text-gray-800">Live System Logs</h3>
+      <div id="logsBox" class="bg-black text-green-400 font-mono p-4 h-64 overflow-y-auto rounded"></div>
+    </div>
+
+    <!-- Live Transcription Output -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <h3 class="text-xl font-semibold mb-4 text-gray-800">Live Transcription Output</h3>
+      <div id="transcriptBox" class="bg-gray-800 text-white font-mono p-4 h-64 overflow-y-auto rounded"></div>
+    </div>
+  </div>
+</main>
+
+<!-- =============== SCRIPTS =============== -->
+<script>
+
+// LOG helper
+function logMsg(msg) {
+    const box = document.getElementById("logsBox");
+    box.innerHTML += msg + "<br>";
+    box.scrollTop = box.scrollHeight;
+}
+
+// TRANSCRIPT helper
+function addTranscript(text) {
+    const box = document.getElementById("transcriptBox");
+    box.innerHTML += text + "<br>";
+    box.scrollTop = box.scrollHeight;
+}
+
+//
+// WebSocket with auto-reconnect
+//
+let ws;
+function connectWS() {
+    ws = new WebSocket("ws://" + location.host + "/ws");
+
+    ws.onopen = () => logMsg("[WS] Connected");
+    ws.onclose = () => {
+        logMsg("[WS] Disconnected. Reconnecting in 2s...");
+        setTimeout(connectWS, 2000);
+    };
+    ws.onerror = () => logMsg("[WS] Error");
+
+    ws.onmessage = (ev) => {
+        let msg;
+        try { msg = JSON.parse(ev.data); } catch { return; }
+
+        if (msg.type === "job_update") updateJob(msg.job);
+        if (msg.type === "transcript_segment") addTranscript(`[${msg.segment.start.toFixed(2)}] ${msg.segment.text}`);
+        if (msg.type === "download_progress") logMsg(`[Download] ${msg.progress}%`);
+        if (msg.type === "clip_progress") logMsg(`[Clip] ${msg.progress}%`);
+        if (msg.type === "template_progress") logMsg(`[Template] ${msg.progress}%`);
+        if (msg.type === "merge_progress") logMsg(`[Merge] ${msg.progress}%`);
+    };
+}
+connectWS();
+
+//
+// JOB UI (Toasts)
+//
+let jobMap = {};
+function showToast(message, type = 'info') {
+    const container = document.getElementById('toastContainer');
+    const toastEl = document.createElement('div');
+    toastEl.className = `fixed top-4 right-4 z-50 p-4 rounded-md text-white ${type === 'success' ? 'bg-green-500' : type === 'danger' ? 'bg-red-500' : 'bg-blue-500'}`;
+    toastEl.innerHTML = `
+        <div class="flex items-center justify-between">
+            <span>${message}</span>
+            <button class="ml-4 text-white" onclick="this.parentElement.parentElement.remove()">×</button>
+        </div>
+    `;
+    container.appendChild(toastEl);
+    setTimeout(() => toastEl.remove(), 5000);
+}
+
+function updateJob(job) {
+    const prev = jobMap[job.id];
+    jobMap[job.id] = job;
+    if (!prev || prev.status !== job.status) {
+        let message = `Job ${job.status}: ${job.kind}`;
+        let type = 'info';
+        if (job.status === 'finished') type = 'success';
+        if (job.status === 'error') type = 'danger';
+        if (job.status === 'running') type = 'warning';
+        showToast(message, type);
+    }
+}
+
+//
+// API calls
+//
+async function queueDownload() {
+    const payload = { url: ytUrl.value, session_id: ytSession.value };
+    const r = await fetch("/api/download", { method:"POST", headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
+    downloadResp.textContent = await r.text();
+}
+
+async function queueTranscribe() {
+    const payload = { filename: trFile.value, session_id: trSession.value };
+    const r = await fetch("/api/transcribe", { method:"POST", headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
+    transcribeResp.textContent = await r.text();
+}
+
+async function queueClip() {
+    const payload = {
+        filename: clFile.value,
+        start: parseFloat(clStart.value),
+        end: parseFloat(clEnd.value),
+        text: clText.value,
+        session_id: clSession.value,
+        output_name: clOut.value
+    };
+    const r = await fetch("/api/clip", { method:"POST", headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
+    clipResp.textContent = await r.text();
+}
+
+async function queueTemplateClip() {
+    let template_json = null;
+    if (tplJson.value.trim()) {
+        try { template_json = JSON.parse(tplJson.value); }
+        catch { return tplResp.textContent = "Invalid JSON template"; }
+    }
+    const payload = {
+        filename: tplFilename.value,
+        start: parseFloat(tplStart.value),
+        end: parseFloat(tplEnd.value),
+        template_name: tplName.value,
+        template_json: template_json,
+        output_name: tplOutput.value,
+        session_id: tplSession.value
+    };
+    const r = await fetch("/api/template-clip", { method:"POST", headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
+    tplResp.textContent = await r.text();
+}
+
+async function queueMerge() {
+    const clips = mergeList.value.split(",").map(x=>x.trim()).filter(Boolean);
+    const payload = { clips: clips, output_name: mergeOutput.value, session_id: mergeSession.value };
+    const r = await fetch("/api/merge", { method:"POST", headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
+    mergeResp.textContent = await r.text();
+}
+
+async function doCleanup() {
+    const payload = {
+        session_id: cleanupSessionId.value,
+        delete_clips: cleanupClips.checked,
+        delete_video: cleanupVideo.checked
+    };
+    const r = await fetch("/api/session/cleanup", { method:"POST", headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
+    cleanupResp.textContent = await r.text();
+}
+
+</script>
+
+<!-- Toast Container -->
+<div class="toast-container position-fixed top-0 end-0 p-3" id="toastContainer"></div>
+
+</body>
+</html>

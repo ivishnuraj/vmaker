@@ -1,0 +1,32 @@
+{
+  "name": "short_clip",
+  "description": "Quick 15-second clip for social media",
+  "start": 0,
+  "duration": 15,
+  "resolution": "1080:1920",
+  "output_name": "short_clip_{timestamp}.mp4",
+  "overlays": [
+    {
+      "type": "text",
+      "text": "SHORT CLIP",
+      "x": "(w-text_w)/2",
+      "y": "h-250",
+      "fontSize": 48,
+      "textColor": "white",
+      "box": true,
+      "boxColor": "black@0.7",
+      "boxBorder": 15,
+      "shadow": true,
+      "shadowColor": "black@0.8",
+      "shadowX": 3,
+      "shadowY": 3
+    },
+    {
+      "type": "emoji",
+      "emoji": "🚀",
+      "x": "(w-text_w)/2",
+      "y": "100",
+      "fontSize": 64
+    }
+  ]
+}
